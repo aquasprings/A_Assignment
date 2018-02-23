@@ -1,0 +1,41 @@
+use DB09TMS101_1718
+
+
+create table customer1349205_3
+(
+customerid int identity(1,1) primary key,
+cname varchar(40),
+gender varchar(10),
+dob datetime,
+contact bigint,
+city varchar(20)
+
+);
+
+create proc sp_addcustomer_3
+@cn varchar(10), @g varchar(10), @d datetime, @cno bigint, @c varchar(10), @cid int out
+as
+begin
+insert into customer1349205_3 values (@cn,@g,@d,@cno,@c);
+set @cid=@@IDENTITY
+end;
+
+select * from customer1349205_3
+create table account1349205_5
+(
+accid int identity(1000,1),
+cusid int foreign key references customer1349205_3,
+amount int,
+acctype varchar(10)
+);
+
+
+create proc sp_addaccount_5
+ @customerid int , @amount bigint, @acctype varchar(10),@accid int out
+as
+begin 
+insert into account1349205_5 values (@customerid, @amount,@acctype);
+set @accid= @@IDENTITY
+end
+
+select * from account1349205_5
