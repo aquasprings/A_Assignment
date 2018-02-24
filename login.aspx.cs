@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using System.Web.Security;
 
 namespace CustomerUI
 {
@@ -19,14 +20,26 @@ namespace CustomerUI
             string uname = TextBox1.Text;
             string pass = TextBox2.Text;
 
-            if ((uname == "Admin" && pass == "Admin") || (uname == "admin" && pass == "admin"))
+            /*   if ((uname == "Admin" && pass == "Admin") || (uname == "admin" && pass == "admin"))
+               {
+                   Response.Redirect("Customer.aspx");
+               }
+               else
+               {
+                   Response.Write("<script> alert('Invalid Login Credentials')</script>");
+               }
+               */
+
+            if (FormsAuthentication.Authenticate(uname, pass))
             {
-                Response.Redirect("Customer.aspx");
+                FormsAuthentication.RedirectFromLoginPage(uname, true);
             }
             else
             {
-                Response.Write("<script> alert('Invalid Login Credentials')</script>");
+                Response.Write("<script>alert('Invalid Login Credentials')</script>");
             }
+            
+
 
         }
     }
