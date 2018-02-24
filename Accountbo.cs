@@ -12,6 +12,8 @@ namespace AccountBO
         int amount;
         string acctype;        
         int cid;
+        public Accountbo()
+        { }
 
         public int Accountid
         {
