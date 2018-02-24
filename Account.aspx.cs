@@ -33,10 +33,10 @@ namespace CustomerUI
             }
             catch (Exception Ex)
             {
-                if (Ex.Message.Contains("ForeignKeyException"))
-                {
-                    Response.Write("The Customer Id already Exists");
-                }
+                //if (Ex.Message.Contains("ForeignKeyException"))
+                //{
+                    Response.Write("<script>alert('The Customer Id doesn't Exists')</script>");
+               //}
                 
             }
             astatus.Text = "Active";
