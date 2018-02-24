@@ -21,6 +21,7 @@ set @cid=@@IDENTITY
 end;
 
 select * from customer1349205_3
+
 create table account1349205_5
 (
 accid int identity(1000,1),
@@ -39,3 +40,42 @@ set @accid= @@IDENTITY
 end
 
 select * from account1349205_5
+
+create proc sp_viewcustomer
+
+as
+begin
+select * from customer1349205_3
+end;
+
+create proc sp_viewaccount
+as
+begin
+select * from account1349205_5
+end;
+
+create proc sp_viewcustomerbyid
+@id int
+as
+begin
+select * from customer1349205_3 where customerid=@id;
+end;
+
+create proc sp_deletecustomer
+@id int
+as
+begin
+delete from customer1349205_3 where customerid=@id
+end;
+
+alter proc sp_deletecustomer_3
+@id int
+as
+begin
+delete from  account1349205_5  where 
+account1349205_5.cusid=@id  ;
+delete from  customer1349205_3  where 
+customer1349205_3.customerid=@id  ;
+
+end
+
