@@ -34,7 +34,8 @@ namespace CustomerBO
             this.contact = contact;
             this.city = city;
         }
-
+        public Customerbo()
+        { }
         public int Id
         {
             get
