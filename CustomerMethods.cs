@@ -40,7 +40,7 @@ namespace CustomerDAL
 
             }
 
-
+　
         }
         public int AddAccount(Accountbo A)
         {
@@ -74,7 +74,7 @@ namespace CustomerDAL
 
                 }
 
-
+　
             }
             catch (Exception E)
             {
@@ -174,13 +174,25 @@ namespace CustomerDAL
             return rowaffected;
 
         }
+
+        public object ViewJoin()
+        {
+            SqlConnection con = new SqlConnection("server= intvmsql01; user id =PJ09TMS101_1718; database=DB09TMS101_1718;password= tcstvm");
+            con.Open();            
+            SqlDataAdapter adp = new SqlDataAdapter("sp_viewjoin", con);
+            DataTable dt = new DataTable();
+            adp.Fill(dt);
+
+            return dt;            
+
+        }
     }
 }
            
         
 
-
-
-
-
+　
+　
+　
+　
   
