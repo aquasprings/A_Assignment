@@ -1,6 +1,6 @@
 use DB09TMS101_1718
 
-
+　
 create table customer1349205_3
 (
 customerid int identity(1,1) primary key,
@@ -30,7 +30,7 @@ amount int,
 acctype varchar(10)
 );
 
-
+　
 create proc sp_addaccount_5
  @customerid int , @amount bigint, @acctype varchar(10),@accid int out
 as
@@ -68,7 +68,7 @@ begin
 delete from customer1349205_3 where customerid=@id
 end;
 
-alter proc sp_deletecustomer_3
+create proc sp_deletecustomer_3
 @id int
 as
 begin
@@ -76,6 +76,14 @@ delete from  account1349205_5  where
 account1349205_5.cusid=@id  ;
 delete from  customer1349205_3  where 
 customer1349205_3.customerid=@id  ;
-
 end
 
+create proc sp_viewjoin
+as
+begin
+select cname, customerid , accid,amount,acctype from customer1349205_3 join
+ account1349205_5 on customer1349205_3.customerid=account1349205_5.cusid;
+end;
+
+　
+　
