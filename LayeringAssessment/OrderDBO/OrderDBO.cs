@@ -3,198 +3,79 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Data;
+using System.Data.SqlClient;
+using OrderBO;
 
-namespace OrderBO
+namespace OrderDAL
 {
-    public class Item
+    public class OrderDBO
     {
-        int itemID;
-        string itemName;
-        double itemPrice;
-        DateTime manufacturingDate;
-        int quantity;
-
-        public Item()
+        public SqlConnection con;
+        public OrderDBO()
         {
+            con = new SqlConnection("server=intvmsql01;user id=pj01tms55_1718; password=tcstvm; database=db01tms55_1718");
+            con.Open();
         }
-
-        public int ItemID
+        public int addOrder(Order ord)
         {
-            get
-            {
-                return itemID;
-            }
+            SqlCommand cmd = new SqlCommand("addOrder1349995",con);
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.AddWithValue("@itemName", ord.ItemName);
+            cmd.Parameters.AddWithValue("@quantity",ord.Quantity);
+            cmd.Parameters.AddWithValue("@totalPrice", ord.TotalPrice);
+            cmd.Parameters.AddWithValue("@name", ord.CustomerName);
+            cmd.Parameters.AddWithValue("@contact", ord.CustomerContact);
+            cmd.Parameters.AddWithValue("@email", ord.CustomerEmail);
+            cmd.Parameters.AddWithValue("@orderID", 0);
+            cmd.Parameters["@orderID"].Direction = ParameterDirection.Output;
+            ord.OrderID = 0;
 
-            set
-            {
-                itemID = value;
-            }
+            SqlDataReader reader = cmd.ExecuteReader();
+            int neworderid = 0;
+            neworderid = Convert.ToInt16(cmd.Parameters["@orderID"].Value);
+            reader.Close();
+            return neworderid;
         }
-
-        public string ItemName
+        public bool cancelOrder(Order ord)
         {
-            get
-            {
-                return itemName;
-            }
+            SqlCommand cmd = new SqlCommand("cancelOrder1349995", con);
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.AddWithValue("@orderID", ord.OrderID);
 
-            set
-            {
-                itemName = value;
-            }
+            int x = cmd.ExecuteNonQuery();
+            if (x > 0)
+                return true;
+            else
+                return false;
         }
-
-        public double ItemPrice
+        public Item itemDetails(string itemname)
         {
-            get
+            Item retItem = new Item();
+            SqlCommand cmd = new SqlCommand("SELECT quantityAvailable from tblItem_1349995 where itemName = '"+itemname+"'", con);
+            SqlDataReader rdr = cmd.ExecuteReader();
+            while(rdr.Read())
             {
-                return itemPrice;
+                retItem.Quantity=Convert.ToInt16(rdr["quantityAvailable"]);
             }
-
-            set
+            rdr.Close();
+            cmd = new SqlCommand("SELECT price from tblItem_1349995 where itemName = '" + itemname + "'", con);
+            rdr = cmd.ExecuteReader();
+            while (rdr.Read())
             {
-                itemPrice = value;
+                retItem.ItemPrice = Convert.ToDouble(rdr["price"]);
             }
-        }
-
-        public DateTime ManufacturingDate
-        {
-            get
-            {
-                return manufacturingDate;
-            }
-
-            set
-            {
-                manufacturingDate = value;
-            }
-        }
-
-        public int Quantity
-        {
-            get
-            {
-                return quantity;
-            }
-
-            set
-            {
-                quantity = value;
-            }
-        }
-    }
-    public class Order
-    {
-        int orderID;
-        string itemName;
-        int quantity;
-        double totalPrice;
-        string customerName;
-        string customerContact;
-        string customerEmail;
-        public Order()
-        {
-            //default
-        }
-        public int OrderID
-        {
-            get
-            {
-                return orderID;
-            }
-
-            set
-            {
-                orderID = value;
-            }
-        }
-
-        public string ItemName
-        {
-            get
-            {
-                return itemName;
-            }
-
-            set
-            {
-                itemName = value;
-            }
-        }
-
-        public int Quantity
-        {
-            get
-            {
-                return quantity;
-            }
-
-            set
-            {
-                quantity = value;
-            }
-        }
-
-        public double TotalPrice
-        {
-            get
-            {
-                return totalPrice;
-            }
-
-            set
-            {
-                totalPrice = value;
-            }
-        }
-
-        public string CustomerName
-        {
-            get
-            {
-                return customerName;
-            }
-
-            set
-            {
-                customerName = value;
-            }
-        }
-
-        public string CustomerContact
-        {
-            get
-            {
-                return customerContact;
-            }
-
-            set
-            {
-                customerContact = value;
-            }
-        }
-
-        public string CustomerEmail
-        {
-            get
-            {
-                return customerEmail;
-            }
-
-            set
-            {
-                customerEmail = value;
-            }
-        }
-
-        public Order(string itemName, int quantity, double totalPrice, string customerName, string customerContact, string customerEmail)
-        {
-            this.ItemName = itemName;
-            this.Quantity = quantity;
-            this.TotalPrice = totalPrice;
-            this.CustomerName = customerName;
-            this.CustomerContact = customerContact;
-            this.CustomerEmail = customerEmail;
+            rdr.Close();
+            /*cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.AddWithValue("@itemName", itemname);
+            cmd.Parameters.AddWithValue("@quantity", 0);
+            cmd.Parameters.AddWithValue("@itemPrice", 0);
+            cmd.Parameters["@quantity"].Direction = ParameterDirection.Output;
+            cmd.Parameters["@itemPrice"].Direction = ParameterDirection.Output;
+            retItem.ItemName = itemname;
+            retItem.Quantity =  Convert.ToInt16(cmd.Parameters["@quantity"].Value);
+            retItem.ItemPrice = Convert.ToDouble(cmd.Parameters["@itemPrice"].Value);*/
+            return retItem;
         }
     }
 }
